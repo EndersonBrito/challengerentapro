@@ -2,21 +2,27 @@
 
 import { useRef } from 'react';
 import { addRoom } from '../actions/add-room-action';
+import { getUrlParam } from '../utils/global';
 
 export function ModalRoom () {
-
+    const idApartament = getUrlParam('apartmet');
+   
     const formRef = useRef<HTMLFormElement>(null)
-
-
   return (
     <div className="modal">
       {/* Contenido del modal */}
         <form ref={formRef} action={async (formData) => {
+            const fileInput = document.querySelector('input[type="file"]');
+            const file = fileInput.files[0];
+            
+            // Append the file directly to a FormData
+            formData.append('file', file);
             await addRoom(formData)
             formRef.current?.reset()
             }}  className="max-w-md mx-auto">
-        
+            <input type="hidden" name="id_apartament" value={idApartament} />
             <div className="relative z-0 w-full mb-5 group">
+        
                     <input type="text" name="room_name" id="room_name" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label htmlFor="room_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Name</label>
                 </div>
@@ -26,8 +32,8 @@ export function ModalRoom () {
                     <label htmlFor="room_equipament" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Equipament</label>
                 </div>
                 <div className="relative z-0 w-full mb-5 group">
-                    <input type="number" pattern="[0-9]" name="room_price" id="room_price" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                    <label htmlFor="room_price" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">size</label>
+                    <input type="number" pattern="[0-9]" name="room_size" id="room_size" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <label htmlFor="room_size" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">size</label>
                 </div>
             </div>
             <div className="relative z-0 w-full mb-5 group">

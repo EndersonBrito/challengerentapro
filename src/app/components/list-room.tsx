@@ -1,10 +1,11 @@
 'use client'
 
-import { IconBuilding } from "@tabler/icons-react";
+import { IconBuilding,IconEye } from "@tabler/icons-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Rooms } from "../types/room";
 import { ModalRoom } from "./modal-room";
+import { getUrlParam } from "../utils/global";
 
 export function ListRooms ({ rooms }: { rooms: Rooms | null }){
     const [mostrarAddRoom, setMostrarAddRoom] = useState(false);
@@ -12,15 +13,28 @@ export function ListRooms ({ rooms }: { rooms: Rooms | null }){
         const toggleAddRoom = () => {
             setMostrarAddRoom(!mostrarAddRoom);
         };
+        console.log(rooms)
 
 
     return(
         <>
+            <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+                <Link href={{ pathname: '/',}}>
+                        List Apartamts
+                </Link>
+                </button>
+            
          {mostrarAddRoom ? (
-                <><ModalRoom /><button onClick={toggleAddRoom} type="button" className="text-gray-900 bg-blue hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 mb-2">
-                    Cancel
-                </button></>
+            
+                <>
+                 
+                    <ModalRoom />
+                    <button onClick={toggleAddRoom} type="button" className="text-gray-900 bg-blue hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 mb-2">
+                        Cancel
+                    </button>
+                </>
                 ) : (
+                  
                 <div className="relative overflow-x-auto">
                     <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
                     <div>
@@ -62,23 +76,25 @@ export function ListRooms ({ rooms }: { rooms: Rooms | null }){
                     </thead>
                     <tbody>
                         <>
+                        
                         {rooms?.map(room => (
                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
 
                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {room.apartments?.id}
+                                {room.apartments?.name}
                             </th>
                             <td className="px-6 py-4">
                                 {room.name}
                             </td>
-                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <td className="px-6 py-4 font-mesdium text-gray-900 whitespace-nowrap dark:text-white">
                                 {room.equipment}
                             </td>
                             <td className="px-6 py-4">
                                 {room.size}
                             </td>
                             <td className="px-6 py-4">
-                                {room.image_url}
+                               
+                               <a href={room.image_url} target="_blank" className="block" ><IconEye className='w-8 h-8' /> </a>
                             </td>
                             </tr>
                         ))}

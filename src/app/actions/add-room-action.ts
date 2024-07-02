@@ -3,34 +3,40 @@
 import { cookies } from 'next/headers'
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { revalidatePath } from 'next/cache';
+import { join } from 'path';
+import { writeFile } from 'fs/promises';
 
 export const addRoom = async (formData: FormData) => {
     const name = formData.get('room_name');
-    const room_equipament = formData.get('room_equipament');
-    const room_price = formData.get('room_price');
-    const room_image = formData.get('room_image');
-    console.log("name");
+    const apartment_id = formData.get('id_apartament');
+    const equipment = formData.get('room_equipament');
+    const size = formData.get('room_size');
+    const image_url = formData.get('file');
+  
+    const buffer = Buffer.from(await image_url.arrayBuffer());
+    const path = join("apartamet", apartment_id ,'/', image_url.name.replace(" ", "-"));
+  try {
     if (name  === null) return
-    console.log(room_image);
     const supabase = createServerActionClient({cookies})
+    const imageName = image_url.name.replace(" ", '')
     //revisamos si el dueño esta conectado
     const {data : {user}}  = await supabase.auth.getUser();
     if (user  === null) return
-    console.log("user");
-    console.log(user.id);
-    
-    /*await supabase.from('rooms').insert({name, room_equipament, room_price, room_image, owner_id : user.id})
      await supabase.storage
-        .from('apartament')
-        .upload(files.image.originalFilename, fileContent, {
-          contentType: files.image.mimetype,
-          cacheControl: '3600',
-        });
-    console.log("room_equipament");
-    console.log(room_equipament);
-    console.log("price");
-    console.log(price);
-    console.log("description");
-    console.log(description);*/
+      .from('apartament')
+      .upload(  imageName,buffer, {
+        contentType: 'image/jpeg',
+      })
+      const urlImg = supabase.storage.from('apartament').getPublicUrl(imageName);
+       const publicUrlImg =urlImg.data.publicUrl
+      await supabase.from('rooms').insert({name, equipment, size,image_url: publicUrlImg, apartment_id : apartment_id})
+
+    } catch (error) {
+      // Capture the error message to display to the user
+    
+      console.error("error")
+      console.error(error)
+    } 
+    
     revalidatePath(`/room`)
 }
